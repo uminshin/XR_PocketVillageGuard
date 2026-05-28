@@ -309,6 +309,7 @@ MonoBehaviour:
   weapons:
   - {fileID: 11400000, guid: 0e9ff5587f8b5dc4dadd4e75ca1f86e8, type: 2}
   - {fileID: 11400000, guid: c2e699295e2082c4cae9667ccbb737d8, type: 2}
+  - {fileID: 11400000, guid: 442f2caa5284ba6419fa888eb160e720, type: 2}
   currentWeaponIndex: 0
   weaponSocket: {fileID: 1034622086}
   firePoint: {fileID: 117885978}
@@ -461,6 +462,7 @@ GameObject:
   - component: {fileID: 1135211703}
   - component: {fileID: 1135211702}
   - component: {fileID: 1135211701}
+  - component: {fileID: 1135211707}
   - component: {fileID: 1135211706}
   m_Layer: 3
   m_Name: Enemy
@@ -595,6 +597,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1135211707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135211700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacc29b0e011b8a419b1678fb51f7802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1280952475
 GameObject:
   m_ObjectHideFlags: 0

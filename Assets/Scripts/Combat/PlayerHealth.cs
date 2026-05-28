@@ -23,7 +23,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (weaponController != null && weaponController.IsDefending)
         {
-            damage = Mathf.RoundToInt(damage * defendingDamageRate);
+            damage = Mathf.RoundToInt(damage * weaponController.CurrentDefenseDamageRate);
         }
 
         currentHealth -= damage;

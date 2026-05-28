@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccc99b9764d6f047854035fb6aef079, type: 3}
+  m_Name: IceWeaponData
+  m_EditorClassIdentifier: 
+  weaponName: Ice
+  element: 2
+  weaponModelPrefab: {fileID: 0}
+  attackType: 5
+  attackPrefab: {fileID: 139456698509494082, guid: cb5e8cde6d5b904429c752da56d6f912,
+    type: 3}
+  attackDamage: 15
+  attackCooldown: 1
+  attackSpeed: 7
+  attackRadius: 0
+  defenseType: 6
+  defensePrefab: {fileID: 8162058792007800615, guid: 4e29e2c9e1b02ad4aa0c7012fdac2999,
+    type: 3}
+  defensePower: 10
+  defenseCooldown: 1.5
+  defenseDuration: 4
+  defenseRadius: 0
+  defenseDamageRate: 0.1

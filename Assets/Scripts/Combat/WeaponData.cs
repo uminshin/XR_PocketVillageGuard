@@ -17,7 +17,9 @@ public enum AbilityType
     Projectile,
     Barrier,
     Bomb,
-    FlameWall
+    FlameWall,
+    Snowball,
+    IceShield
 }
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Combat/Weapon Data")]
@@ -43,4 +45,5 @@ public class WeaponData : ScriptableObject
     public float defenseCooldown = 1f;
     public float defenseDuration = 3f;
     public float defenseRadius = 2f;
+    public float defenseDamageRate = 0.3f;
 }

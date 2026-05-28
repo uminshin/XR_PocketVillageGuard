@@ -20,6 +20,7 @@ public class PlayerWeaponController : MonoBehaviour
     private float nextDefenseTime;
 
     public bool IsDefending { get; private set; }
+    public float CurrentDefenseDamageRate { get; private set; } = 1f;
 
     private void Start()
     {
@@ -111,6 +112,10 @@ public class PlayerWeaponController : MonoBehaviour
                 SpawnBomb(weapon);
                 break;
 
+            case AbilityType.Snowball:
+                SpawnSnowball(weapon);
+                break;
+
             case AbilityType.None:
                 Debug.Log("No attack ability assigned.");
                 break;
@@ -140,6 +145,10 @@ public class PlayerWeaponController : MonoBehaviour
 
             case AbilityType.FlameWall:
                 SpawnFlameWall(weapon);
+                break;
+
+            case AbilityType.IceShield:
+                SpawnIceShield(weapon);
                 break;
 
             case AbilityType.None:
@@ -206,6 +215,7 @@ public class PlayerWeaponController : MonoBehaviour
         if (barrier != null)
         {
             IsDefending = true;
+            CurrentDefenseDamageRate = weapon.defenseDamageRate;
             barrier.Init(weapon.defensePower, weapon.defenseDuration, weapon.defenseRadius, this);
         }
     }
@@ -283,9 +293,89 @@ public class PlayerWeaponController : MonoBehaviour
         Debug.Log("Flame wall spawned.");
     }
 
+    private void SpawnSnowball(WeaponData weapon)
+    {
+        if (weapon.attackPrefab == null)
+        {
+            Debug.LogWarning("Snowball Prefab is not assigned.");
+            return;
+        }
+
+        Transform spawnPoint = firePoint != null ? firePoint : transform;
+
+        GameObject obj = Instantiate(
+            weapon.attackPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        SnowballProjectile snowball = obj.GetComponent<SnowballProjectile>();
+
+        if (snowball != null)
+        {
+            snowball.Init(weapon.attackDamage);
+        }
+        else
+        {
+            Debug.LogWarning("SnowballProjectile script is missing on Attack Prefab.");
+        }
+
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            Vector3 throwDirection = spawnPoint.forward + Vector3.up * 0.45f;
+            rb.AddForce(throwDirection.normalized * weapon.attackSpeed, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.LogWarning("Rigidbody is missing on Snowball Prefab.");
+        }
+    }
+
+    private void SpawnIceShield(WeaponData weapon)
+    {
+        if (weapon.defensePrefab == null)
+        {
+            Debug.LogWarning("Ice Shield Prefab is not assigned.");
+            return;
+        }
+
+        if (currentDefenseObject != null)
+        {
+            Destroy(currentDefenseObject);
+        }
+
+        Vector3 spawnPosition = transform.position + transform.forward * 1.2f + Vector3.up * 1.0f;
+        Quaternion spawnRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+
+        currentDefenseObject = Instantiate(
+            weapon.defensePrefab,
+            spawnPosition,
+            spawnRotation,
+            transform
+        );
+
+        IceShield iceShield = currentDefenseObject.GetComponent<IceShield>();
+
+        if (iceShield != null)
+        {
+            IsDefending = true;
+            CurrentDefenseDamageRate = weapon.defenseDamageRate;
+            iceShield.Init(weapon.defenseDuration, this);
+        }
+        else
+        {
+            Debug.LogWarning("IceShield script is missing on Defense Prefab.");
+        }
+
+        Debug.Log("Ice shield spawned.");
+    }
+
     public void EndDefense()
     {
         IsDefending = false;
+        CurrentDefenseDamageRate = 1f;
         currentDefenseObject = null;
     }
 }
