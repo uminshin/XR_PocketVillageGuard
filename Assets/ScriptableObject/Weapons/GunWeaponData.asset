@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccc99b9764d6f047854035fb6aef079, type: 3}
+  m_Name: GunWeaponData
+  m_EditorClassIdentifier: 
+  weaponName: Gun
+  element: 0
+  weaponModelPrefab: {fileID: 0}
+  attackType: 1
+  attackPrefab: {fileID: 4480293149616397257, guid: 48754d072d5db2645b72e0f21a780091,
+    type: 3}
+  attackDamage: 10
+  attackCooldown: 0.5
+  attackSpeed: 10
+  defenseType: 2
+  defensePrefab: {fileID: 1363456751456131505, guid: 52936ec2d0b85744f84264b5719b0f0b,
+    type: 3}
+  defensePower: 10
+  defenseCooldown: 1
+  defenseDuration: 3
+  defenseRadius: 2
