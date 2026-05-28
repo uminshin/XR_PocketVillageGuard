@@ -18,6 +18,11 @@ public class EnemyHealth : MonoBehaviour
     {
         currentHealth -= damage;
 
+        if (currentHealth < 0)
+        {
+            currentHealth = 0;
+        }
+
         Debug.Log($"{gameObject.name} took {damage} damage. HP: {currentHealth}");
 
         if (currentHealth <= 0)

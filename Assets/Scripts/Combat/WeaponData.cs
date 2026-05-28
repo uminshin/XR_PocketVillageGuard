@@ -15,7 +15,8 @@ public enum AbilityType
 {
     None,
     Projectile,
-    Barrier
+    Barrier,
+    Bomb
 }
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Combat/Weapon Data")]
@@ -32,6 +33,7 @@ public class WeaponData : ScriptableObject
     public int attackDamage = 10;
     public float attackCooldown = 0.5f;
     public float attackSpeed = 10f;
+    public float attackRadius = 3f;
 
     [Header("Defense")]
     public AbilityType defenseType = AbilityType.Barrier;

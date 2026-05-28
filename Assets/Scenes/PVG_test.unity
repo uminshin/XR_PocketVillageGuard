@@ -308,6 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapons:
   - {fileID: 11400000, guid: 0e9ff5587f8b5dc4dadd4e75ca1f86e8, type: 2}
+  - {fileID: 11400000, guid: c2e699295e2082c4cae9667ccbb737d8, type: 2}
   currentWeaponIndex: 0
   weaponSocket: {fileID: 1034622086}
   firePoint: {fileID: 117885978}
@@ -460,7 +461,7 @@ GameObject:
   - component: {fileID: 1135211703}
   - component: {fileID: 1135211702}
   - component: {fileID: 1135211701}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}

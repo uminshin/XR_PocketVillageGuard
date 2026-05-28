@@ -107,6 +107,10 @@ public class PlayerWeaponController : MonoBehaviour
                 SpawnProjectile(weapon);
                 break;
 
+            case AbilityType.Bomb:
+                SpawnBomb(weapon);
+                break;
+
             case AbilityType.None:
                 Debug.Log("No attack ability assigned.");
                 break;
@@ -168,6 +172,46 @@ public class PlayerWeaponController : MonoBehaviour
         else
         {
             Debug.LogWarning("Projectile script is missing on Attack Prefab.");
+        }
+    }
+
+    private void SpawnBomb(WeaponData weapon)
+    {
+        if (weapon.attackPrefab == null)
+        {
+            Debug.LogWarning("Bomb Prefab is not assigned.");
+            return;
+        }
+
+        Transform spawnPoint = firePoint != null ? firePoint : transform;
+
+        GameObject obj = Instantiate(
+            weapon.attackPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation
+        );
+
+        Bomb bomb = obj.GetComponent<Bomb>();
+
+        if (bomb != null)
+        {
+            bomb.Init(weapon.attackDamage, weapon.attackRadius);
+        }
+        else
+        {
+            Debug.LogWarning("Bomb script is missing on Attack Prefab.");
+        }
+
+        Rigidbody rb = obj.GetComponent<Rigidbody>();
+
+        if (rb != null)
+        {
+            Vector3 throwDirection = spawnPoint.forward + Vector3.up * 0.5f;
+            rb.AddForce(throwDirection.normalized * weapon.attackSpeed, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.LogWarning("Rigidbody is missing on Bomb Prefab.");
         }
     }
     

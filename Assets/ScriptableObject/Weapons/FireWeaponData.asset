@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eccc99b9764d6f047854035fb6aef079, type: 3}
+  m_Name: FireWeaponData
+  m_EditorClassIdentifier: 
+  weaponName: Fire
+  element: 1
+  weaponModelPrefab: {fileID: 0}
+  attackType: 3
+  attackPrefab: {fileID: 6581600015539517164, guid: 8640570e32149ab4ba9207eb6b5c1e8f,
+    type: 3}
+  attackDamage: 30
+  attackCooldown: 1.5
+  attackSpeed: 8
+  attackRadius: 3
+  defenseType: 0
+  defensePrefab: {fileID: 0}
+  defensePower: 10
+  defenseCooldown: 1
+  defenseDuration: 3
+  defenseRadius: 2
