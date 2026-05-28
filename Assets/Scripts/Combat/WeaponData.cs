@@ -19,7 +19,9 @@ public enum AbilityType
     Bomb,
     FlameWall,
     Snowball,
-    IceShield
+    IceShield,
+    ElectricMelee,
+    ElectricReviveChannel
 }
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Combat/Weapon Data")]
@@ -37,6 +39,7 @@ public class WeaponData : ScriptableObject
     public float attackCooldown = 0.5f;
     public float attackSpeed = 10f;
     public float attackRadius = 3f;
+    public float attackDuration = 0.5f;
 
     [Header("Defense")]
     public AbilityType defenseType = AbilityType.Barrier;

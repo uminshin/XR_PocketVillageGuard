@@ -21,6 +21,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     public bool IsDefending { get; private set; }
     public float CurrentDefenseDamageRate { get; private set; } = 1f;
+    private RevivableAlly currentReviveTarget;
 
     private void Start()
     {
@@ -47,14 +48,37 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void HandleCombatInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             UseAttack();
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (weapons == null || weapons.Length == 0) return;
+
+        WeaponData weapon = weapons[currentWeaponIndex];
+
+        bool defenseDown = Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift);
+        bool defenseHeld = Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftShift);
+        bool defenseUp = Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.LeftShift);
+
+        if (weapon.defenseType == AbilityType.ElectricReviveChannel)
         {
-            UseDefense();
+            if (defenseHeld)
+            {
+                ContinueElectricRevive(weapon);
+            }
+
+            if (defenseUp)
+            {
+                StopElectricRevive();
+            }
+        }
+        else
+        {
+            if (defenseDown)
+            {
+                UseDefense();
+            }
         }
     }
 
@@ -114,6 +138,10 @@ public class PlayerWeaponController : MonoBehaviour
 
             case AbilityType.Snowball:
                 SpawnSnowball(weapon);
+                break;
+
+            case AbilityType.ElectricMelee:
+                SpawnElectricMelee(weapon);
                 break;
 
             case AbilityType.None:
@@ -372,6 +400,115 @@ public class PlayerWeaponController : MonoBehaviour
         Debug.Log("Ice shield spawned.");
     }
 
+    private void SpawnElectricMelee(WeaponData weapon)
+    {
+        if (weapon.attackPrefab == null)
+        {
+            Debug.LogWarning("Electric Melee Prefab is not assigned.");
+            return;
+        }
+
+        Vector3 spawnPosition = transform.position + transform.forward * 1.2f + Vector3.up * 1.0f;
+        Quaternion spawnRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+
+        GameObject obj = Instantiate(
+            weapon.attackPrefab,
+            spawnPosition,
+            spawnRotation,
+            transform
+        );
+
+        ElectricMeleeHitbox hitbox = obj.GetComponent<ElectricMeleeHitbox>();
+
+        if (hitbox != null)
+        {
+            hitbox.Init(weapon.attackDamage, weapon.attackDuration);
+        }
+        else
+        {
+            Debug.LogWarning("ElectricMeleeHitbox script is missing on Attack Prefab.");
+        }
+
+        Debug.Log("Electric swatter attack spawned.");
+    }
+
+    private void ContinueElectricRevive(WeaponData weapon)
+    {
+        if (Time.time < nextDefenseTime) return;
+
+        RevivableAlly target = FindReviveTarget(weapon.defenseRadius);
+
+        if (target == null)
+        {
+            if (currentReviveTarget != null)
+            {
+                Debug.Log("Electric revive target lost.");
+                currentReviveTarget = null;
+            }
+
+            return;
+        }
+
+        if (currentReviveTarget != target)
+        {
+            currentReviveTarget = target;
+            Debug.Log($"Electric revive started: {target.gameObject.name}");
+        }
+
+        target.AddReviveProgress(Time.deltaTime);
+
+        if (!target.IsDowned)
+        {
+            nextDefenseTime = Time.time + weapon.defenseCooldown;
+            StopElectricRevive();
+        }
+    }
+
+    private RevivableAlly FindReviveTarget(float range)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, range);
+
+        RevivableAlly bestTarget = null;
+        float bestDistance = float.MaxValue;
+
+        foreach (Collider collider in colliders)
+        {
+            RevivableAlly ally = collider.GetComponentInParent<RevivableAlly>();
+
+            if (ally == null) continue;
+            if (!ally.IsDowned) continue;
+
+            Vector3 directionToAlly = ally.transform.position - transform.position;
+            directionToAlly.y = 0f;
+
+            if (directionToAlly.magnitude <= 0.01f) continue;
+
+            float forwardDot = Vector3.Dot(transform.forward, directionToAlly.normalized);
+
+            // 플레이어 뒤쪽에 있는 아군은 소생 대상에서 제외
+            if (forwardDot < 0.3f) continue;
+
+            float distance = directionToAlly.magnitude;
+
+            if (distance < bestDistance)
+            {
+                bestDistance = distance;
+                bestTarget = ally;
+            }
+        }
+
+        return bestTarget;
+    }
+
+    private void StopElectricRevive()
+    {
+        if (currentReviveTarget != null)
+        {
+            Debug.Log("Electric revive stopped.");
+        }
+
+        currentReviveTarget = null;
+    }
     public void EndDefense()
     {
         IsDefending = false;
