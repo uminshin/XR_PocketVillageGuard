@@ -22,9 +22,10 @@ MonoBehaviour:
   attackCooldown: 1.5
   attackSpeed: 8
   attackRadius: 3
-  defenseType: 0
-  defensePrefab: {fileID: 0}
-  defensePower: 10
-  defenseCooldown: 1
-  defenseDuration: 3
+  defenseType: 4
+  defensePrefab: {fileID: 4086257322923143025, guid: 59f397a8496c78f40861ff86d774533f,
+    type: 3}
+  defensePower: 20
+  defenseCooldown: 2
+  defenseDuration: 5
   defenseRadius: 2

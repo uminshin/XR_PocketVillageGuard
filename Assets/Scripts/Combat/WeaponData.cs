@@ -16,7 +16,8 @@ public enum AbilityType
     None,
     Projectile,
     Barrier,
-    Bomb
+    Bomb,
+    FlameWall
 }
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Combat/Weapon Data")]

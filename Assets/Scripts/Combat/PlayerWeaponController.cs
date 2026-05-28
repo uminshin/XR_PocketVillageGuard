@@ -138,6 +138,10 @@ public class PlayerWeaponController : MonoBehaviour
                 SpawnBarrier(weapon);
                 break;
 
+            case AbilityType.FlameWall:
+                SpawnFlameWall(weapon);
+                break;
+
             case AbilityType.None:
                 Debug.Log("No defense ability assigned.");
                 break;
@@ -172,6 +176,37 @@ public class PlayerWeaponController : MonoBehaviour
         else
         {
             Debug.LogWarning("Projectile script is missing on Attack Prefab.");
+        }
+    }
+    
+    private void SpawnBarrier(WeaponData weapon)
+    {
+        if (weapon.defensePrefab == null)
+        {
+            Debug.LogWarning("Defense Prefab is not assigned.");
+            return;
+        }
+
+        if (currentDefenseObject != null)
+        {
+            Destroy(currentDefenseObject);
+        }
+
+        currentDefenseObject = Instantiate(
+            weapon.defensePrefab,
+            transform.position,
+            transform.rotation,
+            transform
+        );
+
+        Debug.Log("Shield spawned.");
+
+        Barrier barrier = currentDefenseObject.GetComponent<Barrier>();
+
+        if (barrier != null)
+        {
+            IsDefending = true;
+            barrier.Init(weapon.defensePower, weapon.defenseDuration, weapon.defenseRadius, this);
         }
     }
 
@@ -214,36 +249,38 @@ public class PlayerWeaponController : MonoBehaviour
             Debug.LogWarning("Rigidbody is missing on Bomb Prefab.");
         }
     }
-    
-    private void SpawnBarrier(WeaponData weapon)
+
+    private void SpawnFlameWall(WeaponData weapon)
     {
         if (weapon.defensePrefab == null)
         {
-            Debug.LogWarning("Defense Prefab is not assigned.");
+            Debug.LogWarning("Flame Wall Prefab is not assigned.");
             return;
         }
 
-        if (currentDefenseObject != null)
-        {
-            Destroy(currentDefenseObject);
-        }
+        Vector3 spawnPosition = transform.position + transform.forward * 3f;
+        spawnPosition.y = 0.05f;
 
-        currentDefenseObject = Instantiate(
+        Quaternion spawnRotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+
+        GameObject obj = Instantiate(
             weapon.defensePrefab,
-            transform.position,
-            transform.rotation,
-            transform
+            spawnPosition,
+            spawnRotation
         );
 
-        Debug.Log("Shield spawned.");
+        FlameWall flameWall = obj.GetComponent<FlameWall>();
 
-        Barrier barrier = currentDefenseObject.GetComponent<Barrier>();
-
-        if (barrier != null)
+        if (flameWall != null)
         {
-            IsDefending = true;
-            barrier.Init(weapon.defensePower, weapon.defenseDuration, weapon.defenseRadius, this);
+            flameWall.Init(weapon.defensePower, weapon.defenseDuration);
         }
+        else
+        {
+            Debug.LogWarning("FlameWall script is missing on Defense Prefab.");
+        }
+
+        Debug.Log("Flame wall spawned.");
     }
 
     public void EndDefense()
