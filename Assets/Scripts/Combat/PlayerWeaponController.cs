@@ -48,18 +48,31 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void HandleCombatInput()
     {
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-        {
-            UseAttack();
-        }
-
         if (weapons == null || weapons.Length == 0) return;
 
         WeaponData weapon = weapons[currentWeaponIndex];
 
+        bool attackDown = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space);
+        bool attackHeld = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space);
+
         bool defenseDown = Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.LeftShift);
         bool defenseHeld = Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftShift);
         bool defenseUp = Input.GetMouseButtonUp(1) || Input.GetKeyUp(KeyCode.LeftShift);
+
+        if (weapon.attackType == AbilityType.PoisonMushroomSpread)
+        {
+            if (attackHeld)
+            {
+                ContinuePoisonMushroomSpread(weapon);
+            }
+        }
+        else
+        {
+            if (attackDown)
+            {
+                UseAttack();
+            }
+        }
 
         if (weapon.defenseType == AbilityType.ElectricReviveChannel)
         {
@@ -144,6 +157,10 @@ public class PlayerWeaponController : MonoBehaviour
                 SpawnElectricMelee(weapon);
                 break;
 
+            case AbilityType.PoisonMushroomSpread:
+                ContinuePoisonMushroomSpread(weapon);
+                break;
+
             case AbilityType.None:
                 Debug.Log("No attack ability assigned.");
                 break;
@@ -177,6 +194,10 @@ public class PlayerWeaponController : MonoBehaviour
 
             case AbilityType.IceShield:
                 SpawnIceShield(weapon);
+                break;
+
+            case AbilityType.HealZone:
+                SpawnHealZone(weapon);
                 break;
 
             case AbilityType.None:
@@ -509,6 +530,81 @@ public class PlayerWeaponController : MonoBehaviour
 
         currentReviveTarget = null;
     }
+
+    private void ContinuePoisonMushroomSpread(WeaponData weapon)
+    {
+        if (Time.time < nextAttackTime) return;
+
+        if (weapon.attackPrefab == null)
+        {
+            Debug.LogWarning("Poison Mushroom Prefab is not assigned.");
+            return;
+        }
+
+        nextAttackTime = Time.time + weapon.attackCooldown;
+
+        Vector2 randomCircle = Random.insideUnitCircle * weapon.mushroomSpreadRadius;
+        Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, 0f, randomCircle.y);
+
+        spawnPosition.y = 0.05f;
+
+        GameObject obj = Instantiate(
+            weapon.attackPrefab,
+            spawnPosition,
+            Quaternion.identity
+        );
+
+        PoisonMushroomAlly mushroom = obj.GetComponent<PoisonMushroomAlly>();
+
+        if (mushroom != null)
+        {
+            mushroom.Init(weapon.attackDamage, weapon.attackDuration, weapon.attackRadius);
+        }
+        else
+        {
+            Debug.LogWarning("PoisonMushroomAlly script is missing on Attack Prefab.");
+        }
+
+        Debug.Log("Poison mushroom spawned.");
+    }
+
+    private void SpawnHealZone(WeaponData weapon)
+    {
+        if (weapon.defensePrefab == null)
+        {
+            Debug.LogWarning("Heal Zone Prefab is not assigned.");
+            return;
+        }
+
+        if (currentDefenseObject != null)
+        {
+            Destroy(currentDefenseObject);
+        }
+
+        Vector3 spawnPosition = transform.position + transform.forward * 1.5f;
+        spawnPosition.y = 0.05f;
+
+        currentDefenseObject = Instantiate(
+            weapon.defensePrefab,
+            spawnPosition,
+            Quaternion.identity
+        );
+
+        HealZone healZone = currentDefenseObject.GetComponent<HealZone>();
+
+        if (healZone != null)
+        {
+            healZone.Init(weapon.defensePower, weapon.defenseDuration, weapon.defenseRadius);
+        }
+        else
+        {
+            Debug.LogWarning("HealZone script is missing on Defense Prefab.");
+        }
+
+        Debug.Log("Heal zone spawned.");
+    }
+
+
     public void EndDefense()
     {
         IsDefending = false;

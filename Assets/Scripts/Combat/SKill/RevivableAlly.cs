@@ -80,4 +80,18 @@ public class RevivableAlly : MonoBehaviour
 
         Debug.Log($"{gameObject.name} revived. HP: {currentHealth}");
     }
+
+    public void Heal(int amount)
+    {
+        if (IsDowned) return;
+
+        currentHealth += amount;
+
+        if (currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+
+        Debug.Log($"{gameObject.name} ally healed {amount}. HP: {currentHealth}");
+    }
 }

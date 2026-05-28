@@ -21,7 +21,9 @@ public enum AbilityType
     Snowball,
     IceShield,
     ElectricMelee,
-    ElectricReviveChannel
+    ElectricReviveChannel,
+    PoisonMushroomSpread,
+    HealZone
 }
 
 [CreateAssetMenu(fileName = "NewWeaponData", menuName = "Combat/Weapon Data")]
@@ -49,4 +51,7 @@ public class WeaponData : ScriptableObject
     public float defenseDuration = 3f;
     public float defenseRadius = 2f;
     public float defenseDamageRate = 0.3f;
+
+    [Header("Poison Mushroom")]
+    public float mushroomSpreadRadius = 2f;
 }
